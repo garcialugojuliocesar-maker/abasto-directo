@@ -320,14 +320,14 @@ ${totalKg} kg
       {/* NAVBAR */}
       <header className="sticky top-0 z-50 border-b border-[#E5E7EB]/70 bg-[#F7F7F4]/90 backdrop-blur-xl">
 
-        <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-5 lg:px-8 lg:py-4">
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-7 lg:px-8 lg:py-6">
 
           <a href="#hero" className="flex items-center">
 
             <img
               src="/images/logo-abasto-navbar.png"
               alt="Abasto Club"
-              className="h-30 w-auto object-contain sm:h-30 lg:h-30"
+              className="h-28 w-auto object-contain sm:h-32 lg:h-36"
             />
 
           </a>
