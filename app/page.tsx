@@ -4,7 +4,8 @@ import React, { useMemo, useState } from "react";
 
 export default function AbastoDirectoLanding() {
 
-  const whatsappNumber = "5215500000000";
+  const whatsappNumber =
+process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
 
   const whatsappBaseMessage =
     "Hola, quiero realizar un pedido en Abasto Club.";
@@ -98,7 +99,18 @@ export default function AbastoDirectoLanding() {
   // STATES PEDIDO
   // =========================
 
-  const [cp, setCp] = useState("");
+  const [coverageCp, setCoverageCp] = useState("");
+
+  // Validador verde: solo consulta cobertura.
+  const [coverageChecked, setCoverageChecked] =
+    useState(false);
+  const [coverageHasCoverage, setCoverageHasCoverage] =
+    useState(false);
+  const [coverageZoneName, setCoverageZoneName] =
+    useState("");
+
+  // Validador naranja: pedido y WhatsApp.
+  const [customerCp, setCustomerCp] = useState("");
   const [checked, setChecked] = useState(false);
   const [hasCoverage, setHasCoverage] = useState(false);
   const [zoneName, setZoneName] = useState("");
@@ -122,26 +134,46 @@ export default function AbastoDirectoLanding() {
   // COBERTURA LOGICA
   // =========================
 
-  const handleCoverageCheck = () => {
+  const findCoverageZone = (cp: string) => {
 
     const cleanCP = cp.trim();
 
     if (!/^\d{4,5}$/.test(cleanCP)) {
-
-      setHasCoverage(false);
-      setZoneName("");
-      setChecked(true);
-
-      return;
+      return null;
     }
 
     const cpNumber = Number(cleanCP);
 
-    const matchedZone = coverageZones.find(
+    return coverageZones.find(
       (zone) =>
         cpNumber >= zone.start &&
         cpNumber <= zone.end
     );
+  };
+
+  // Validador verde: no afecta el pedido ni WhatsApp.
+  const handleCoverageCheck = () => {
+
+    const matchedZone = findCoverageZone(coverageCp);
+
+    if (matchedZone) {
+
+      setCoverageHasCoverage(true);
+      setCoverageZoneName(matchedZone.zone);
+
+    } else {
+
+      setCoverageHasCoverage(false);
+      setCoverageZoneName("");
+    }
+
+    setCoverageChecked(true);
+  };
+
+  // Validador naranja: controla el pedido y habilita WhatsApp.
+  const handleCustomerCoverageCheck = () => {
+
+    const matchedZone = findCoverageZone(customerCp);
 
     if (matchedZone) {
 
@@ -278,7 +310,7 @@ DATOS DEL CLIENTE
 
 Nombre: ${customerName}
 WhatsApp: ${customerWhatsapp}
-Código Postal: ${cp}
+Código Postal: ${customerCp}
 Colonia: ${customerColony}
 
 ========================
@@ -968,13 +1000,20 @@ ${totalKg} kg
                 />
 
                 <input
+
                   type="text"
+
                   placeholder="Código Postal"
-                  value={cp}
+
+                  value={customerCp}
+
                   onChange={(e) =>
-                    setCp(e.target.value)
+
+                    setCustomerCp(e.target.value)
+
                   }
                   className="w-full rounded-2xl border border-[#D1D5DB] bg-white px-5 py-5 text-lg font-semibold outline-none"
+
                 />
 
                 <input
@@ -988,7 +1027,7 @@ ${totalKg} kg
                 />
 
                 <button
-                  onClick={handleCoverageCheck}
+                  onClick={handleCustomerCoverageCheck}
                   className="w-full rounded-2xl bg-[#0B7A33] px-6 py-5 text-lg font-extrabold text-white transition hover:bg-[#086228]"
                 >
                   Verificar cobertura
@@ -1026,11 +1065,24 @@ ${totalKg} kg
                   href={finalWhatsappUrl}
                   target="_blank"
                   rel="noreferrer"
+                  onClick={() => {
+
+                    // @ts-ignore
+                    window.gtag?.("event", "click_whatsapp", {
+
+                      event_category: "conversion",
+                      event_label: selectedPackage.name,
+                      value: totalKg,
+
+                    });
+
+                  }}
                   className={`inline-flex w-full items-center justify-center rounded-2xl px-6 py-5 text-lg font-extrabold text-white transition ${
                     packageCompleted &&
                     hasCoverage &&
                     customerName &&
-                    customerWhatsapp
+                    customerWhatsapp &&
+                    customerCp
                       ? "bg-[#FF6B00] hover:bg-[#EA5F00]"
                       : "pointer-events-none bg-gray-400"
                   }`}
@@ -1108,12 +1160,13 @@ ${totalKg} kg
 
               <input
                 type="text"
-                value={cp}
+                value={coverageCp}
                 maxLength={5}
-                onChange={(e) => setCp(e.target.value)}
+                onChange={(e) => setCoverageCp(e.target.value)}
                 placeholder="03100"
                 className="rounded-2xl border border-[#D1D5DB] bg-white px-5 py-4 text-lg font-semibold outline-none"
-              />
+
+              /> 
 
               <button
                 onClick={handleCoverageCheck}
@@ -1126,7 +1179,7 @@ ${totalKg} kg
 
           </div>
 
-          {checked && hasCoverage && (
+          {coverageChecked && coverageHasCoverage && (
 
             <div className="mt-6 rounded-2xl border border-[#86EFAC] bg-[#DCFCE7] p-5">
 
@@ -1135,14 +1188,14 @@ ${totalKg} kg
               </p>
 
               <p className="mt-2 text-xl font-extrabold text-[#0B5D2A]">
-                {zoneName}
+                {coverageZoneName}
               </p>
 
             </div>
 
           )}
 
-          {checked && !hasCoverage && (
+          {coverageChecked && !coverageHasCoverage && (
 
             <div className="mt-6 rounded-2xl border border-[#FCD34D] bg-[#FEF3C7] p-5">
 
