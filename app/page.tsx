@@ -4,8 +4,7 @@ import React, { useMemo, useState } from "react";
 
 export default function AbastoDirectoLanding() {
 
-  const whatsappNumber =
-    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "525664468301";
+  const whatsappNumber = "525664468301";
 
   const whatsappBaseMessage =
     "Hola, quiero realizar un pedido en Abasto Club.";
