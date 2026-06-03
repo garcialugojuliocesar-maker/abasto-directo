@@ -5,7 +5,7 @@ import React, { useMemo, useState } from "react";
 export default function AbastoDirectoLanding() {
 
   const whatsappNumber =
-process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "";
+    process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "525664468301";
 
   const whatsappBaseMessage =
     "Hola, quiero realizar un pedido en Abasto Club.";
@@ -1273,6 +1273,27 @@ ${totalKg} kg
         </div>
 
       </section>
+
+
+      {/* BOTÓN FLOTANTE WHATSAPP */}
+      <a
+        href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+          "Hola, quiero información sobre los paquetes de Abasto Club."
+        )}`}
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Contactar por WhatsApp"
+        className="fixed bottom-6 right-6 z-[99999] flex h-16 w-16 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_14px_38px_rgba(0,0,0,0.28)] transition hover:scale-105 hover:bg-[#1EBE5D] active:scale-95 md:h-20 md:w-20"
+      >
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 32 32"
+          className="h-9 w-9 md:h-11 md:w-11"
+          fill="currentColor"
+        >
+          <path d="M16.01 3.2C8.95 3.2 3.2 8.95 3.2 16.01c0 2.26.59 4.47 1.72 6.42L3.2 28.8l6.53-1.71a12.72 12.72 0 0 0 6.28 1.6h.01c7.06 0 12.8-5.75 12.8-12.81S23.07 3.2 16.01 3.2Zm0 23.31h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-3.87 1.01 1.03-3.77-.25-.39a10.56 10.56 0 0 1-1.62-5.64c0-5.8 4.72-10.52 10.52-10.52 2.81 0 5.45 1.1 7.44 3.09a10.45 10.45 0 0 1 3.08 7.43c0 5.8-4.72 10.5-10.53 10.5Zm5.77-7.88c-.32-.16-1.87-.92-2.16-1.03-.29-.11-.5-.16-.71.16-.21.32-.82 1.03-1.01 1.24-.19.21-.37.24-.69.08-.32-.16-1.34-.49-2.55-1.57-.94-.84-1.58-1.88-1.77-2.2-.19-.32-.02-.49.14-.65.14-.14.32-.37.48-.55.16-.19.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.71-1.71-.98-2.34-.26-.62-.52-.53-.71-.54h-.61c-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66s1.15 3.09 1.31 3.3c.16.21 2.26 3.45 5.48 4.84.77.33 1.37.53 1.84.68.77.24 1.47.21 2.02.13.62-.09 1.87-.76 2.14-1.5.26-.74.26-1.37.18-1.5-.08-.13-.29-.21-.61-.37Z" />
+        </svg>
+      </a>
 
     </main>
 
